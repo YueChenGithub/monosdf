@@ -51,7 +51,7 @@ device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
 # get target task and model
 if args.task == 'normal':
-    image_size = 384
+    image_size = 512
     
     ## Version 1 model
     # pretrained_weights_path = root_dir + 'omnidata_unet_normal_v1.pth'
@@ -83,7 +83,7 @@ if args.task == 'normal':
                                         get_transform('rgb', image_size=None)])
 
 elif args.task == 'depth':
-    image_size = 384
+    image_size = 512
     pretrained_weights_path = root_dir + 'omnidata_dpt_depth_v2.ckpt'  # 'omnidata_dpt_depth_v1.ckpt'
     # model = DPTDepthModel(backbone='vitl16_384') # DPT Large
     model = DPTDepthModel(backbone='vitb_rn50_384') # DPT Hybrid

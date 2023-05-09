@@ -43,6 +43,9 @@ cd monosdf
 conda create -y -n monosdf python=3.8
 conda activate monosdf
 
+pip install torch==1.13.1 torchvision==0.14.1 torchaudio==0.13.1
+conda install cudatoolkit-dev=11.7 -c conda-forge
+
 conda install pytorch torchvision cudatoolkit=11.3 -c pytorch
 conda install cudatoolkit-dev=11.3 -c conda-forge
 
@@ -144,8 +147,18 @@ python nice_slam_apartment_to_monosdf.py
 
 Then, we can extract monocular depths and normals (please install [omnidata model](https://github.com/EPFL-VILAB/omnidata) before running the command):
 ```
-python extract_monocular_cues.py --task depth --img_path ../data/Apartment/scan1/image --output_path ../data/Apartment/scan1 --omnidata_path YOUR_OMNIDATA_PATH --pretrained_models PRETRAINED_MODELS
-python extract_monocular_cues.py --task normal --img_path ../data/Apartment/scan1/image --output_path ../data/Apartment/scan1 --omnidata_path YOUR_OMNIDATA_PATH --pretrained_models PRETRAINED_MODELS
+python extract_monocular_cues.py --task depth --img_path ../data/Apartment/scan1/image --output_path ../data/Apartment/scan1 --omnidata_path /home/yue/Desktop/omnidata/omnidata_tools/torch --pretrained_models /home/yue/Desktop/omnidata/omnidata_tools/torch/pretrained_models/
+python extract_monocular_cues.py --task normal --img_path ../data/Apartment/scan1/image --output_path ../data/Apartment/scan1 --omnidata_path /home/yue/Desktop/omnidata/omnidata_tools/torch --pretrained_models /home/yue/Desktop/omnidata/omnidata_tools/torch/pretrained_models/
+```
+
+```bash
+conda activate onmi2
+cd preprocess
+exp=lego_3072
+python extract_monocular_cues.py --task depth --img_path ../data/nerfactor/$exp/image --output_path ../data/nerfactor/$exp --omnidata_path /home/yue/Desktop/omnidata/omnidata_tools/torch --pretrained_models /home/yue/Desktop/omnidata/omnidata_tools/torch/pretrained_models/
+python extract_monocular_cues.py --task normal --img_path ../data/nerfactor/$exp/image --output_path ../data/nerfactor/$exp --omnidata_path /home/yue/Desktop/omnidata/omnidata_tools/torch --pretrained_models /home/yue/Desktop/omnidata/omnidata_tools/torch/pretrained_models/
+conda activate monosdf
+cd ..
 ```
 
 Finally, we train monosdf as
@@ -180,7 +193,6 @@ python generate_high_res_map.py --mode create_patches
 
 and run the Omnidata model to predict monocular cues for each patch 
 ```
-python extract_monocular_cues.py --task depth --img_path ./highres_tmp/scan1/image/ --output_path ./highres_tmp/scan1 --omnidata_path YOUR_OMNIDATA_PATH --pretrained_models PRETRAINED_MODELS
 python extract_monocular_cues.py --task depth --img_path ./highres_tmp/scan1/image/ --output_path ./highres_tmp/scan1 --omnidata_path YOUR_OMNIDATA_PATH --pretrained_models PRETRAINED_MODELS
 ```
 This step will take a long time (~2 hours) since there are many patches and the model only use a batch size of 1. 
